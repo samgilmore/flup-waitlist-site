@@ -204,10 +204,13 @@
 
 .hero-stat-number {
   font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-size: clamp(1.6rem, 3.35vw, 2.2rem);
   font-weight: 800;
   letter-spacing: -0.05em;
-  color: rgba(17, 24, 39, 0.9);
+  background: linear-gradient(135deg, #2563eb 0%, #1d9bf0 48%, #0f766e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-stat-label {

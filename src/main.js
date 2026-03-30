@@ -7,6 +7,7 @@ import { escapeHtml } from "./lib/html.js";
 import { fetchWaitlistStats, lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
 import {
+  buildHeroStatMarkup,
   buildPublicTotalLabel,
   buildWaitlistPositionLabel,
   WAITLIST_EXTERNAL_OFFSET
@@ -52,7 +53,7 @@ app.innerHTML = `
           <span class="hero-title-line">it matters.</span>
         </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
-        <p class="hero-stat" id="hero-stat">${buildPublicTotalLabel(WAITLIST_EXTERNAL_OFFSET)}</p>
+        <p class="hero-stat" id="hero-stat">${buildHeroStatMarkup(WAITLIST_EXTERNAL_OFFSET)}</p>
 
         <div class="hero-actions">
           <div class="hero-panel-stack">
@@ -134,7 +135,7 @@ function setCardMode(mode) {
 }
 
 function updateHeroStat(totalSignups = WAITLIST_EXTERNAL_OFFSET) {
-  heroStat.textContent = buildPublicTotalLabel(totalSignups);
+  heroStat.innerHTML = buildHeroStatMarkup(totalSignups);
 }
 
 function renderResultCard(payload) {
@@ -151,11 +152,6 @@ function renderResultCard(payload) {
         ${
           Number.isFinite(payload.waitlistPosition)
             ? `<p class="result-stat">${escapeHtml(buildWaitlistPositionLabel(payload.waitlistPosition))}</p>`
-            : ""
-        }
-        ${
-          Number.isFinite(payload.totalSignups)
-            ? `<p class="result-stat result-stat--muted">${escapeHtml(buildPublicTotalLabel(payload.totalSignups))}</p>`
             : ""
         }
       </div>

@@ -13,3 +13,10 @@ export function buildPublicTotalLabel(totalSignups) {
 export function buildWaitlistPositionLabel(waitlistPosition) {
   return `You’re #${formatCount(waitlistPosition)} on the list`;
 }
+
+export function buildHeroStatMarkup(totalSignups) {
+  return `
+    <span class="hero-stat-number">${formatCount(totalSignups)}</span>
+    <span class="hero-stat-label">people already joined</span>
+  `;
+}

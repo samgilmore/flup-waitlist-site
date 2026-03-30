@@ -7,7 +7,8 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
   await expect(page.getByAltText("FLUP app icon")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Follow up like it matters." })).toBeVisible();
   await expect(page.getByAltText("FLUP hero icon")).toBeVisible();
-  await expect(page.getByText(/1,004 people already joined/i)).toBeVisible();
+  await expect(page.locator("#hero-stat .hero-stat-number")).toHaveText("1,004");
+  await expect(page.locator("#hero-stat .hero-stat-label")).toHaveText("people already joined");
   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.locator("#lookup-panel")).toBeHidden();

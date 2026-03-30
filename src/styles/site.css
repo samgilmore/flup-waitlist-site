@@ -185,11 +185,37 @@
 }
 
 .hero-stat {
-  margin: -0.15rem 0 0;
-  font-size: clamp(0.98rem, 1.8vw, 1.14rem);
+  margin: -0.05rem 0 0;
+  display: inline-grid;
+  gap: 0.1rem;
+  justify-items: center;
+  padding: 0.95rem 1.25rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(250, 252, 255, 0.72) 100%);
+  box-shadow: 0 20px 44px rgba(88, 132, 182, 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.hero-stat-number,
+.hero-stat-label {
+  display: block;
+}
+
+.hero-stat-number {
+  font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: rgba(17, 24, 39, 0.9);
+}
+
+.hero-stat-label {
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: rgba(17, 24, 39, 0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(17, 24, 39, 0.52);
 }
 
 .hero-actions {

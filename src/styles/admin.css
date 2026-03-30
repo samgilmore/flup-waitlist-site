@@ -79,7 +79,7 @@ body {
   padding: 0 1.25rem;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--flup-blue-deep) 0%, var(--flup-blue) 100%);
+  background: linear-gradient(135deg, var(--flup-blue-strong) 0%, var(--flup-blue) 100%);
   color: #ffffff;
   font-weight: 700;
   cursor: pointer;
@@ -87,7 +87,7 @@ body {
 
 .secondary-button {
   background: transparent;
-  color: var(--flup-blue-deep);
+  color: var(--flup-blue-strong);
   border: 1px solid rgba(22, 58, 134, 0.18);
 }
 
@@ -147,7 +147,7 @@ body {
   padding: 0 0.75rem;
   border-radius: 999px;
   background: rgba(47, 109, 246, 0.1);
-  color: var(--flup-blue-deep);
+  color: var(--flup-blue-strong);
   font-size: 0.8rem;
   font-weight: 700;
 }
@@ -162,7 +162,7 @@ body {
   border: 0;
   border-radius: 999px;
   background: rgba(22, 58, 134, 0.08);
-  color: var(--flup-blue-deep);
+  color: var(--flup-blue-strong);
   font-weight: 700;
   cursor: pointer;
 }

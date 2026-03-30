@@ -4,8 +4,13 @@ import flupWordmark from "./assets/flup-wordmark.png";
 import flupAppIcon from "./assets/flup-ios-icon.png";
 import flupForegroundIcon from "./assets/flup-ios-icon-foreground.png";
 import { escapeHtml } from "./lib/html.js";
-import { lookupWaitlist, signupWaitlist } from "./lib/api.js";
+import { fetchWaitlistStats, lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
+import {
+  buildPublicTotalLabel,
+  buildWaitlistPositionLabel,
+  WAITLIST_EXTERNAL_OFFSET
+} from "./lib/waitlist-stats.js";
 import {
   getSavedReferralCode,
   getSavedWaitlistState,
@@ -47,6 +52,7 @@ app.innerHTML = `
           <span class="hero-title-line">it matters.</span>
         </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
+        <p class="hero-stat" id="hero-stat">${buildPublicTotalLabel(WAITLIST_EXTERNAL_OFFSET)}</p>
 
         <div class="hero-actions">
           <div class="hero-panel-stack">
@@ -109,6 +115,7 @@ const lookupBack = document.querySelector("#lookup-back");
 const lookupPanel = document.querySelector("#lookup-panel");
 const lookupToggle = document.querySelector("#lookup-toggle");
 const lookupStage = document.querySelector("#lookup-stage");
+const heroStat = document.querySelector("#hero-stat");
 const resultCard = document.querySelector("#result-card");
 const formMessage = document.querySelector("#form-message");
 const signupStage = document.querySelector("#signup-stage");
@@ -126,6 +133,10 @@ function setCardMode(mode) {
   lookupStage.hidden = !showLookup;
 }
 
+function updateHeroStat(totalSignups = WAITLIST_EXTERNAL_OFFSET) {
+  heroStat.textContent = buildPublicTotalLabel(totalSignups);
+}
+
 function renderResultCard(payload) {
   const progress = getRewardProgress(payload.referralCount ?? 0, payload.rewardTarget ?? 5);
   const referralLink = payload.referralLink ?? buildReferralLink(payload.referralCode);
@@ -133,6 +144,23 @@ function renderResultCard(payload) {
   const bodyCopy = progress.unlocked
     ? "You hit the early-access threshold."
     : `Invite ${progress.remaining} more ${progress.remaining === 1 ? "friend" : "friends"} to unlock early access.`;
+  const hasStats = Number.isFinite(payload.waitlistPosition) || Number.isFinite(payload.totalSignups);
+  const resultStatsMarkup = hasStats
+    ? `
+      <div class="result-stats">
+        ${
+          Number.isFinite(payload.waitlistPosition)
+            ? `<p class="result-stat">${escapeHtml(buildWaitlistPositionLabel(payload.waitlistPosition))}</p>`
+            : ""
+        }
+        ${
+          Number.isFinite(payload.totalSignups)
+            ? `<p class="result-stat result-stat--muted">${escapeHtml(buildPublicTotalLabel(payload.totalSignups))}</p>`
+            : ""
+        }
+      </div>
+    `
+    : "";
 
   resultCard.hidden = false;
   resultCard.innerHTML = `
@@ -141,6 +169,7 @@ function renderResultCard(payload) {
       <h3>${escapeHtml(heading)}</h3>
     </div>
     <p class="result-email">Signed up with <strong>${escapeHtml(payload.email ?? "")}</strong></p>
+    ${resultStatsMarkup}
     <p class="result-copy">${escapeHtml(bodyCopy)}</p>
     <div class="result-stack">
       <p><strong>Referral link</strong></p>
@@ -155,7 +184,16 @@ function renderResultCard(payload) {
 
 if (savedWaitlistState) {
   renderResultCard(savedWaitlistState);
+  updateHeroStat(savedWaitlistState.totalSignups);
 }
+
+fetchWaitlistStats()
+  .then((payload) => {
+    updateHeroStat(payload.totalSignups);
+  })
+  .catch(() => {
+    updateHeroStat();
+  });
 
 lookupToggle.addEventListener("click", () => {
   setCardMode("lookup");
@@ -184,6 +222,7 @@ waitlistForm.addEventListener("submit", async (event) => {
     const response = await signupWaitlist(payload);
     saveWaitlistState(window.localStorage, response);
     renderResultCard(response);
+    updateHeroStat(response.totalSignups);
     setMessage(response.status === "existing" ? "You were already on the list. Here’s your link." : "You’re on the list.");
   } catch (error) {
     setMessage(error.message, "error");
@@ -203,6 +242,7 @@ lookupForm.addEventListener("submit", async (event) => {
     const response = await lookupWaitlist(payload);
     saveWaitlistState(window.localStorage, response);
     renderResultCard(response);
+    updateHeroStat(response.totalSignups);
     setMessage("Found your waitlist invite.");
   } catch (error) {
     setMessage(error.message, "error");

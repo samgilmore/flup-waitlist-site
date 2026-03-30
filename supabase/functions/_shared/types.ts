@@ -17,5 +17,7 @@ export interface WaitlistResponse {
   rewardTarget: number;
   rewardUnlocked: boolean;
   status: "created" | "existing";
+  totalSignups: number;
   userStatus: WaitlistStatus;
+  waitlistPosition: number;
 }

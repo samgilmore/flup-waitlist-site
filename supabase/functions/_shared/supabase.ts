@@ -20,6 +20,10 @@ export function getRewardTarget() {
   return Number(Deno.env.get("EARLY_ACCESS_REFERRAL_TARGET") ?? "5");
 }
 
+export function getExternalSignupOffset() {
+  return Number(Deno.env.get("WAITLIST_EXTERNAL_SIGNUPS_OFFSET") ?? "1004");
+}
+
 export function getSiteUrl(request: Request) {
   return (
     Deno.env.get("SITE_URL") ??

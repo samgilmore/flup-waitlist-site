@@ -4,8 +4,18 @@ import {
   normalizeEmail,
   validateReferralAttribution
 } from "../_shared/referral.ts";
-import { createServiceClient, getRewardTarget, getSiteUrl } from "../_shared/supabase.ts";
-import { buildWaitlistResponse, type WaitlistUserRow } from "../_shared/waitlist.ts";
+import {
+  createServiceClient,
+  getExternalSignupOffset,
+  getRewardTarget,
+  getSiteUrl
+} from "../_shared/supabase.ts";
+import {
+  buildWaitlistResponse,
+  getTotalSignups,
+  getWaitlistPosition,
+  type WaitlistUserRow
+} from "../_shared/waitlist.ts";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -46,6 +56,7 @@ Deno.serve(async (request) => {
 
   try {
     const supabase = createServiceClient();
+    const externalSignupOffset = getExternalSignupOffset();
     const rewardTarget = getRewardTarget();
     const siteUrl = getSiteUrl(request);
     const body = await request.json();
@@ -60,7 +71,7 @@ Deno.serve(async (request) => {
 
     const existingResult = await supabase
       .from("waitlist_users")
-      .select("email, first_name, referral_code, referral_count, status")
+      .select("id, created_at, email, first_name, referral_code, referral_count, status")
       .eq("email", email)
       .maybeSingle<WaitlistUserRow>();
 
@@ -69,7 +80,21 @@ Deno.serve(async (request) => {
     }
 
     if (existingResult.data) {
-      return json(buildWaitlistResponse(existingResult.data, siteUrl, rewardTarget, "existing"));
+      const [totalSignups, waitlistPosition] = await Promise.all([
+        getTotalSignups(supabase, externalSignupOffset),
+        getWaitlistPosition(supabase, existingResult.data, externalSignupOffset)
+      ]);
+
+      return json(
+        buildWaitlistResponse(
+          existingResult.data,
+          siteUrl,
+          rewardTarget,
+          "existing",
+          totalSignups,
+          waitlistPosition
+        )
+      );
     }
 
     let referrer:
@@ -82,7 +107,7 @@ Deno.serve(async (request) => {
     if (suppliedReferralCode) {
       const referrerResult = await supabase
         .from("waitlist_users")
-        .select("id, email, first_name, referral_code, referral_count, status")
+        .select("id, created_at, email, first_name, referral_code, referral_count, status")
         .eq("referral_code", suppliedReferralCode)
         .maybeSingle();
 
@@ -106,7 +131,7 @@ Deno.serve(async (request) => {
         referral_code: referralCode,
         referred_by_user_id: referrer?.id ?? null
       })
-      .select("id, email, first_name, referral_code, referral_count, status")
+      .select("id, created_at, email, first_name, referral_code, referral_count, status")
       .single();
 
     if (createdUserResult.error) {
@@ -144,11 +169,18 @@ Deno.serve(async (request) => {
       }
     }
 
+    const [totalSignups, waitlistPosition] = await Promise.all([
+      getTotalSignups(supabase, externalSignupOffset),
+      getWaitlistPosition(supabase, createdUserResult.data, externalSignupOffset)
+    ]);
+
     const response = buildWaitlistResponse(
       createdUserResult.data,
       siteUrl,
       rewardTarget,
-      "created"
+      "created",
+      totalSignups,
+      waitlistPosition
     );
 
     return json(response);

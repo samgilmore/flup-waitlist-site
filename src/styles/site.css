@@ -135,7 +135,8 @@
   gap: 0.75rem;
 }
 
-.waitlist-form input {
+.waitlist-form input,
+.lookup-form input {
   min-height: 3rem;
   padding: 0.8rem 1rem;
   border-radius: 0.9rem;
@@ -153,12 +154,90 @@
   cursor: pointer;
 }
 
+.field-optional {
+  font-size: 0.85em;
+  color: rgba(19, 35, 60, 0.55);
+}
+
 .lookup-button {
   justify-self: start;
   padding: 0 1.25rem;
   background: transparent;
   color: var(--flup-blue-deep);
   border: 1px solid rgba(22, 58, 134, 0.18);
+}
+
+.lookup-panel,
+.result-card {
+  padding: 1.1rem 1.2rem;
+  border-radius: 1.3rem;
+  background: rgba(238, 244, 255, 0.8);
+  border: 1px solid rgba(47, 109, 246, 0.12);
+}
+
+.lookup-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lookup-form button {
+  min-height: 3rem;
+  justify-self: start;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--flup-blue-deep) 0%, var(--flup-blue) 100%);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.result-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.result-header,
+.result-stack,
+.progress-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.result-header h3,
+.result-copy,
+.result-stack p,
+.progress-row span {
+  margin: 0;
+}
+
+.result-link {
+  color: var(--flup-blue-deep);
+  word-break: break-all;
+}
+
+.progress-track {
+  height: 0.7rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(16, 35, 63, 0.08);
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--flup-blue) 0%, var(--flup-warm) 100%);
+}
+
+.form-message {
+  margin: 0;
+  min-height: 1.5rem;
+  color: rgba(19, 35, 60, 0.7);
+}
+
+.form-message[data-tone="error"] {
+  color: #b03d1c;
 }
 
 @media (max-width: 860px) {

@@ -20,6 +20,7 @@ Deno.serve(async (request) => {
   try {
     const { supabase } = await requireAdmin(request);
     const url = new URL(request.url);
+    const full = url.searchParams.get("full") === "true";
     const search = url.searchParams.get("search")?.trim() ?? "";
     const threshold = Number(url.searchParams.get("threshold") ?? "0");
     const safeThreshold = Number.isFinite(threshold) ? threshold : 0;
@@ -28,8 +29,11 @@ Deno.serve(async (request) => {
       .from("waitlist_users")
       .select("id, email, first_name, phone_number, referral_count, status, created_at, referred_by_user_id")
       .order("referral_count", { ascending: false })
-      .order("created_at", { ascending: true })
-      .limit(200);
+      .order("created_at", { ascending: true });
+
+    if (!full) {
+      query = query.limit(200);
+    }
 
     if (search) {
       query = query.ilike("email", `%${search}%`);

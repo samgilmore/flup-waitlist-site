@@ -56,6 +56,40 @@ describe("admin api helpers", () => {
     );
   });
 
+  it("can request the full unfiltered waitlist", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      async json() {
+        return {
+          rows: [{ email: "sam@example.com", referral_count: 5 }]
+        };
+      }
+    });
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    await fetchAdminWaitlist(
+      createClient(),
+      {
+        full: true
+      },
+      {
+        supabaseUrl: "https://example.supabase.co",
+        supabaseAnonKey: "public-anon-key"
+      }
+    );
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://example.supabase.co/functions/v1/admin-list-users?full=true",
+      {
+        headers: {
+          apikey: "public-anon-key",
+          Authorization: "Bearer admin-token"
+        }
+      }
+    );
+  });
+
   it("updates a user status with the active admin session", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

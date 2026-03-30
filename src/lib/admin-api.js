@@ -44,6 +44,9 @@ export async function fetchAdminWaitlist(client, params = {}, runtimeConfig = co
   if (params.threshold) {
     url.searchParams.set("threshold", params.threshold);
   }
+  if (params.full) {
+    url.searchParams.set("full", "true");
+  }
 
   const response = await fetch(url.toString(), {
     headers: {

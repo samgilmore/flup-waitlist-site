@@ -1,5 +1,6 @@
 import "./styles/base.css";
 import "./styles/admin.css";
+import { buildAdminWaitlistCsv } from "./lib/admin-export.js";
 import { escapeHtml } from "./lib/html.js";
 import { buildAdminSummary } from "./lib/admin-summary.js";
 import {
@@ -77,6 +78,7 @@ adminApp.innerHTML = `
 
           <div class="admin-filter-actions">
             <button type="submit">Refresh data</button>
+            <button class="secondary-button" id="export-csv-button" type="button">Export CSV</button>
           </div>
         </form>
 
@@ -113,6 +115,7 @@ const dashboardMessage = document.querySelector("#admin-dashboard-message");
 const adminTableBody = document.querySelector("#admin-table-body");
 const adminSummaryGrid = document.querySelector("#admin-summary-grid");
 const filtersForm = document.querySelector("#admin-filters");
+const exportCsvButton = document.querySelector("#export-csv-button");
 const signOutButton = document.querySelector("#sign-out-button");
 const rewardThreshold = 5;
 const statusOptions = [
@@ -236,12 +239,24 @@ async function loadTable() {
   };
 
   const [summaryRows, rows] = await Promise.all([
-    fetchAdminWaitlist(client),
+    fetchAdminWaitlist(client, { full: true }),
     fetchAdminWaitlist(client, params)
   ]);
 
   renderSummary(buildAdminSummary(summaryRows));
   renderRows(rows);
+}
+
+function downloadCsv(filename, content) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  link.click();
+
+  URL.revokeObjectURL(url);
 }
 
 adminForm.addEventListener("submit", async (event) => {
@@ -274,6 +289,22 @@ filtersForm.addEventListener("submit", async (event) => {
     setMessage("Waitlist data refreshed.");
   } catch (error) {
     setMessage(error.message, "error");
+  }
+});
+
+exportCsvButton.addEventListener("click", async () => {
+  exportCsvButton.disabled = true;
+
+  try {
+    setMessage("Preparing full waitlist export...");
+    const rows = await fetchAdminWaitlist(client, { full: true });
+    const csv = buildAdminWaitlistCsv(rows);
+    downloadCsv("flup-waitlist.csv", csv);
+    setMessage("CSV export downloaded.");
+  } catch (error) {
+    setMessage(error.message, "error");
+  } finally {
+    exportCsvButton.disabled = false;
   }
 });
 

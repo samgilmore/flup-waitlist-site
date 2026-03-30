@@ -1,12 +1,23 @@
 import { expect, test } from "@playwright/test";
 
 test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
+  await page.route("**/functions/v1/waitlist-stats", async (route) => {
+    await page.waitForTimeout(400);
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ totalSignups: 1011 })
+    });
+  });
+
   await page.goto("/");
 
   await expect(page.getByAltText("FLUP wordmark")).toBeVisible();
   await expect(page.getByAltText("FLUP app icon")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Follow up like it matters." })).toBeVisible();
   await expect(page.getByAltText("FLUP hero icon")).toBeVisible();
+  await expect(page.locator("#hero-stat .hero-stat-label")).toHaveText("Loading live count...");
+  await expect(page.locator("#hero-stat .hero-stat-number")).toHaveAttribute("data-state", "loading");
   await expect(page.locator("#hero-stat .hero-stat-number")).toHaveText(/\d{1,3}(,\d{3})*/);
   await expect(page.locator("#hero-stat .hero-stat-label")).toHaveText("people already joined");
   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();

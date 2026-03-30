@@ -20,3 +20,17 @@ export function buildHeroStatMarkup(totalSignups) {
     <span class="hero-stat-label">people already joined</span>
   `;
 }
+
+export function buildHeroStatLoadingMarkup() {
+  return `
+    <span class="hero-stat-number hero-stat-number--loading" data-state="loading" aria-hidden="true"></span>
+    <span class="hero-stat-label">Loading live count...</span>
+  `;
+}
+
+export function buildHeroStatUnavailableMarkup() {
+  return `
+    <span class="hero-stat-number hero-stat-number--loading" data-state="unavailable" aria-hidden="true"></span>
+    <span class="hero-stat-label">Live count unavailable</span>
+  `;
+}

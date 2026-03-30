@@ -7,10 +7,10 @@ import { escapeHtml } from "./lib/html.js";
 import { fetchWaitlistStats, lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
 import {
+  buildHeroStatLoadingMarkup,
   buildHeroStatMarkup,
-  buildPublicTotalLabel,
+  buildHeroStatUnavailableMarkup,
   buildWaitlistPositionLabel,
-  WAITLIST_EXTERNAL_OFFSET
 } from "./lib/waitlist-stats.js";
 import {
   getSavedReferralCode,
@@ -53,7 +53,7 @@ app.innerHTML = `
           <span class="hero-title-line">it matters.</span>
         </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
-        <p class="hero-stat" id="hero-stat">${buildHeroStatMarkup(WAITLIST_EXTERNAL_OFFSET)}</p>
+        <p class="hero-stat" id="hero-stat">${buildHeroStatLoadingMarkup()}</p>
 
         <div class="hero-actions">
           <div class="hero-panel-stack">
@@ -134,7 +134,7 @@ function setCardMode(mode) {
   lookupStage.hidden = !showLookup;
 }
 
-function updateHeroStat(totalSignups = WAITLIST_EXTERNAL_OFFSET) {
+function updateHeroStat(totalSignups) {
   heroStat.innerHTML = buildHeroStatMarkup(totalSignups);
 }
 
@@ -180,7 +180,9 @@ function renderResultCard(payload) {
 
 if (savedWaitlistState) {
   renderResultCard(savedWaitlistState);
-  updateHeroStat(savedWaitlistState.totalSignups);
+  if (Number.isFinite(savedWaitlistState.totalSignups)) {
+    updateHeroStat(savedWaitlistState.totalSignups);
+  }
 }
 
 fetchWaitlistStats()
@@ -188,7 +190,7 @@ fetchWaitlistStats()
     updateHeroStat(payload.totalSignups);
   })
   .catch(() => {
-    updateHeroStat();
+    heroStat.innerHTML = buildHeroStatUnavailableMarkup();
   });
 
 lookupToggle.addEventListener("click", () => {

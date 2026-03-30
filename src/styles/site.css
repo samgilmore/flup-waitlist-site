@@ -213,6 +213,17 @@
   -webkit-text-fill-color: transparent;
 }
 
+.hero-stat-number--loading {
+  width: clamp(5.6rem, 16vw, 7rem);
+  height: 1.18em;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(201, 216, 233, 0.7) 0%, rgba(255, 255, 255, 0.94) 50%, rgba(201, 216, 233, 0.7) 100%);
+  background-size: 200% 100%;
+  -webkit-text-fill-color: initial;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
 .hero-stat-label {
   font-size: 0.82rem;
   font-weight: 700;
@@ -616,6 +627,16 @@
   50% {
     transform: translate3d(0.8rem, -0.5rem, 0);
     opacity: 0.82;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 

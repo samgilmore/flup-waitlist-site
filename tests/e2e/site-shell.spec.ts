@@ -33,6 +33,11 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
     return !element.closest(".signup-panel") && element.parentElement?.classList.contains("hero-panel-stack");
   });
 
+  const heroLineSizes = await page.locator("#hero-title .hero-title-line").evaluateAll((elements) => {
+    return elements.map((element) => Number.parseFloat(window.getComputedStyle(element).fontSize));
+  });
+
   expect(ambientAnimationName).not.toBe("none");
   expect(resultCardIsSeparate).toBe(true);
+  expect(heroLineSizes[1]).toBeLessThan(heroLineSizes[0]);
 });

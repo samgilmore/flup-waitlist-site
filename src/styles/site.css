@@ -155,6 +155,12 @@
   justify-content: center;
 }
 
+.hero-title-line--secondary {
+  font-size: 0.76em;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+
 .hero-title-mark-wrap {
   display: inline-flex;
   align-items: center;

@@ -50,7 +50,7 @@ app.innerHTML = `
             </span>
             <span class="hero-title-rest">ollow Up.</span>
           </span>
-          <span class="hero-title-line">Stay top of mind.</span>
+          <span class="hero-title-line hero-title-line--secondary">Stay top of mind.</span>
         </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
         <p class="hero-stat" id="hero-stat">${buildHeroStatLoadingMarkup()}</p>

@@ -35,7 +35,7 @@ async function getAccessToken(client) {
 
 export async function fetchAdminWaitlist(client, params = {}, runtimeConfig = config) {
   const accessToken = await getAccessToken(client);
-  const { supabaseUrl } = getRuntimeConfig(runtimeConfig);
+  const { supabaseAnonKey, supabaseUrl } = getRuntimeConfig(runtimeConfig);
 
   const url = new URL(`${supabaseUrl}/functions/v1/admin-list-users`);
   if (params.search) {
@@ -47,6 +47,7 @@ export async function fetchAdminWaitlist(client, params = {}, runtimeConfig = co
 
   const response = await fetch(url.toString(), {
     headers: {
+      apikey: supabaseAnonKey,
       Authorization: `Bearer ${accessToken}`
     }
   });
@@ -61,10 +62,11 @@ export async function fetchAdminWaitlist(client, params = {}, runtimeConfig = co
 
 export async function updateAdminUserStatus(client, payload, runtimeConfig = config) {
   const accessToken = await getAccessToken(client);
-  const { supabaseUrl } = getRuntimeConfig(runtimeConfig);
+  const { supabaseAnonKey, supabaseUrl } = getRuntimeConfig(runtimeConfig);
   const response = await fetch(`${supabaseUrl}/functions/v1/admin-update-user-status`, {
     method: "POST",
     headers: {
+      apikey: supabaseAnonKey,
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json"
     },

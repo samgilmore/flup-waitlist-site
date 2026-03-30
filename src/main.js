@@ -88,7 +88,7 @@ app.innerHTML = `
                 </section>
               </div>
 
-              <p class="form-message" id="form-message" aria-live="polite"></p>
+              <p class="form-message" id="form-message" aria-live="polite" hidden></p>
             </section>
 
             <section class="result-card" id="result-card" hidden aria-live="polite"></section>
@@ -114,6 +114,7 @@ const formMessage = document.querySelector("#form-message");
 const signupStage = document.querySelector("#signup-stage");
 
 function setMessage(message, tone = "neutral") {
+  formMessage.hidden = !message;
   formMessage.dataset.tone = tone;
   formMessage.textContent = message;
 }

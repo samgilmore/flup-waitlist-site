@@ -39,7 +39,8 @@ describe("admin api helpers", () => {
         threshold: "5"
       },
       {
-        supabaseUrl: "https://example.supabase.co"
+        supabaseUrl: "https://example.supabase.co",
+        supabaseAnonKey: "public-anon-key"
       }
     );
 
@@ -48,6 +49,7 @@ describe("admin api helpers", () => {
       "https://example.supabase.co/functions/v1/admin-list-users?search=sam&threshold=5",
       {
         headers: {
+          apikey: "public-anon-key",
           Authorization: "Bearer admin-token"
         }
       }
@@ -76,7 +78,8 @@ describe("admin api helpers", () => {
         status: "early_access"
       },
       {
-        supabaseUrl: "https://example.supabase.co"
+        supabaseUrl: "https://example.supabase.co",
+        supabaseAnonKey: "public-anon-key"
       }
     );
 
@@ -90,6 +93,7 @@ describe("admin api helpers", () => {
         status: "early_access"
       }),
       headers: {
+        apikey: "public-anon-key",
         Authorization: "Bearer admin-token",
         "Content-Type": "application/json"
       },

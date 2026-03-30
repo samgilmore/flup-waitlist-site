@@ -7,4 +7,6 @@ test("admin shell shows protected login state", async ({ page }) => {
   await expect(page.getByLabel("Admin email")).toBeVisible();
   await expect(page.getByLabel("Password")).toBeVisible();
   await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+  await expect(page.locator("#admin-dashboard")).toBeHidden();
+  await expect(page.getByRole("button", { name: /sign out/i })).toBeHidden();
 });

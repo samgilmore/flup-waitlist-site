@@ -14,24 +14,30 @@ const client = createAdminClient();
 
 adminApp.innerHTML = `
   <main class="admin-shell">
-    <section class="admin-panel">
-      <div class="admin-copy">
-        <p class="eyebrow">Hidden route</p>
-        <h1>Admin sign in</h1>
-        <p>Protected FLUP waitlist controls for reviewing signups, referrals, and early-access eligibility.</p>
-      </div>
+    <section class="admin-auth" id="admin-auth">
+      <section class="admin-panel admin-panel--auth">
+        <div class="admin-copy">
+          <p class="eyebrow">Hidden route</p>
+          <h1>Admin sign in</h1>
+          <p>Protected FLUP waitlist controls for reviewing signups, referrals, and early-access eligibility.</p>
+        </div>
 
-      <form class="admin-form" id="admin-form">
-        <label for="admin-email">Admin email</label>
-        <input id="admin-email" name="email" type="email" autocomplete="email" required />
+        <form class="admin-form" id="admin-form">
+          <label for="admin-email">Admin email</label>
+          <input id="admin-email" name="email" type="email" autocomplete="email" required />
 
-        <label for="admin-password">Password</label>
-        <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
+          <label for="admin-password">Password</label>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
 
-        <button type="submit">Sign in</button>
-      </form>
+          <button type="submit">Sign in</button>
+        </form>
 
-      <section class="admin-dashboard" id="admin-dashboard" hidden>
+        <p class="admin-message" id="admin-message" aria-live="polite" hidden></p>
+      </section>
+    </section>
+
+    <section class="admin-dashboard" id="admin-dashboard" hidden>
+      <section class="admin-panel admin-panel--dashboard">
         <div class="admin-toolbar">
           <div>
             <p class="eyebrow">Waitlist overview</p>
@@ -72,16 +78,17 @@ adminApp.innerHTML = `
             </tbody>
           </table>
         </div>
+        <p class="admin-message admin-message--dashboard" id="admin-dashboard-message" aria-live="polite" hidden></p>
       </section>
-
-      <p class="admin-message" id="admin-message" aria-live="polite"></p>
     </section>
   </main>
 `;
 
 const adminForm = document.querySelector("#admin-form");
+const authPanel = document.querySelector("#admin-auth");
 const dashboard = document.querySelector("#admin-dashboard");
 const adminMessage = document.querySelector("#admin-message");
+const dashboardMessage = document.querySelector("#admin-dashboard-message");
 const adminTableBody = document.querySelector("#admin-table-body");
 const filtersForm = document.querySelector("#admin-filters");
 const signOutButton = document.querySelector("#sign-out-button");
@@ -94,8 +101,34 @@ const statusOptions = [
 ];
 
 function setMessage(message, tone = "neutral") {
-  adminMessage.dataset.tone = tone;
-  adminMessage.textContent = message;
+  const target = dashboard.hidden ? adminMessage : dashboardMessage;
+  const inactive = dashboard.hidden ? dashboardMessage : adminMessage;
+
+  inactive.hidden = true;
+  inactive.textContent = "";
+  inactive.dataset.tone = "neutral";
+
+  target.hidden = !message;
+  target.dataset.tone = tone;
+  target.textContent = message;
+}
+
+function setAdminState(mode) {
+  const signedIn = mode === "dashboard";
+  authPanel.hidden = signedIn;
+  dashboard.hidden = !signedIn;
+}
+
+function getFriendlyError(error) {
+  if (!(error instanceof Error)) {
+    return "Unable to load admin access.";
+  }
+
+  if (/(401|admin access denied|invalid admin session|jwt|forbidden)/i.test(error.message)) {
+    return "This account is not authorized for the admin dashboard.";
+  }
+
+  return error.message;
 }
 
 function renderEmptyState(message) {
@@ -176,12 +209,14 @@ adminForm.addEventListener("submit", async (event) => {
       email: String(formData.get("email") ?? ""),
       password: String(formData.get("password") ?? "")
     });
-    adminForm.hidden = true;
-    dashboard.hidden = false;
     await loadTable();
+    setAdminState("dashboard");
     setMessage("Admin session active.");
   } catch (error) {
-    setMessage(error.message, "error");
+    await signOutAdmin(client);
+    setAdminState("auth");
+    renderEmptyState("Sign in to load waitlist data.");
+    setMessage(getFriendlyError(error), "error");
   }
 });
 
@@ -199,8 +234,7 @@ filtersForm.addEventListener("submit", async (event) => {
 
 signOutButton.addEventListener("click", async () => {
   await signOutAdmin(client);
-  adminForm.hidden = false;
-  dashboard.hidden = true;
+  setAdminState("auth");
   renderEmptyState("Sign in to load waitlist data.");
   setMessage("Signed out.");
 });
@@ -248,16 +282,19 @@ async function initializeAdminSession() {
     const sessionResult = await client.auth.getSession();
 
     if (!sessionResult.data.session) {
+      setAdminState("auth");
       renderEmptyState("Sign in to load waitlist data.");
       return;
     }
 
-    adminForm.hidden = true;
-    dashboard.hidden = false;
     await loadTable();
+    setAdminState("dashboard");
     setMessage("Admin session restored.");
   } catch (error) {
-    setMessage(error.message, "error");
+    await signOutAdmin(client);
+    setAdminState("auth");
+    renderEmptyState("Sign in to load waitlist data.");
+    setMessage(getFriendlyError(error), "error");
   }
 }
 

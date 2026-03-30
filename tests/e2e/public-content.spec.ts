@@ -12,5 +12,6 @@ test("landing page shows hero, value section, signup, and lookup path", async ({
   await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.getByText(/refer 5 friends for early access/i)).toBeVisible();
   await expect(page.getByRole("button", { name: /check your status/i })).toBeVisible();
+  await expect(page.locator("#form-message")).toBeHidden();
   await expect(page.getByText(/copyright 2026 flup/i)).toBeVisible();
 });

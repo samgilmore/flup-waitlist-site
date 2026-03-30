@@ -5,6 +5,12 @@ body {
     linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
 }
 
+.admin-auth[hidden],
+.admin-dashboard[hidden],
+.admin-message[hidden] {
+  display: none !important;
+}
+
 .admin-shell {
   min-height: 100vh;
   display: grid;
@@ -12,8 +18,13 @@ body {
   padding: 1.5rem;
 }
 
+.admin-auth,
+.admin-dashboard {
+  width: min(100%, 70rem);
+}
+
 .admin-panel {
-  width: min(100%, 62rem);
+  width: 100%;
   display: grid;
   gap: 1.25rem;
   padding: 1.75rem;
@@ -21,6 +32,11 @@ body {
   border: 1px solid rgba(16, 35, 63, 0.1);
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 1.25rem 3rem rgba(19, 35, 60, 0.08);
+}
+
+.admin-panel--auth {
+  max-width: 30rem;
+  margin: 0 auto;
 }
 
 .admin-copy {
@@ -153,7 +169,7 @@ body {
 
 .admin-message {
   margin: 0;
-  min-height: 1.5rem;
+  color: rgba(19, 35, 60, 0.72);
 }
 
 .admin-message[data-tone="error"] {

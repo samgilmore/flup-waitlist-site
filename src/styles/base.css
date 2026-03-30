@@ -1,8 +1,16 @@
 :root {
   color-scheme: light;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  --flup-ink: #10233f;
+  --flup-blue: #2f6df6;
+  --flup-blue-deep: #163a86;
+  --flup-mist: #eef4ff;
+  --flup-warm: #ff8d5d;
+  --flup-warm-soft: #ffd3bf;
+  --flup-surface: #ffffff;
+  --flup-border: rgba(16, 35, 63, 0.1);
   background: #f7f9fd;
-  color: #13233c;
+  color: var(--flup-ink);
 }
 
 * {
@@ -11,6 +19,9 @@
 
 body {
   margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(47, 109, 246, 0.12), transparent 40%),
+    linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
 }
 
 button,

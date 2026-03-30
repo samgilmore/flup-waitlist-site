@@ -30,7 +30,7 @@ adminApp.innerHTML = `
           <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
 
           <div class="admin-form-actions">
-            <button type="submit">Try sign in</button>
+            <button type="submit">Sign in</button>
           </div>
         </form>
 

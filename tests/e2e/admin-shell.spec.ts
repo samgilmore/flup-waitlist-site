@@ -6,13 +6,23 @@ test("admin shell shows protected login state", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /admin sign in/i })).toBeVisible();
   await expect(page.getByLabel("Admin email")).toBeVisible();
   await expect(page.getByLabel("Password")).toBeVisible();
-  const signInButton = page.getByRole("button", { name: /try sign in/i });
+  const signInButton = page.getByRole("button", { name: /^sign in$/i });
   await expect(signInButton).toBeVisible();
   await expect
     .poll(async () =>
       signInButton.evaluate((element) => getComputedStyle(element).backgroundImage)
     )
     .toContain("gradient");
+  await expect
+    .poll(async () =>
+      page.locator(".admin-form-actions").evaluate((element) => getComputedStyle(element).justifyContent)
+    )
+    .toBe("center");
+  await expect
+    .poll(async () =>
+      page.locator(".admin-filter-actions").evaluate((element) => getComputedStyle(element).justifyContent)
+    )
+    .toBe("center");
   await expect(page.locator("#admin-dashboard")).toBeHidden();
   await expect(page.getByRole("button", { name: /sign out/i })).toBeHidden();
 });

@@ -1,47 +1,28 @@
 import { createServiceClient } from "./supabase.ts";
 
-function decodeBase64Url(segment: string) {
-  const normalized = segment.replace(/-/g, "+").replace(/_/g, "/");
-  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-  return atob(padded);
-}
-
-function getVerifiedUserId(request: Request) {
+function getToken(request: Request) {
   const authHeader = request.headers.get("Authorization");
 
   if (!authHeader?.startsWith("Bearer ")) {
     throw new Error("Missing admin authorization.");
   }
 
-  const token = authHeader.replace("Bearer ", "");
-  const [, payloadSegment] = token.split(".");
-
-  if (!payloadSegment) {
-    throw new Error("Invalid admin session.");
-  }
-
-  try {
-    const payload = JSON.parse(decodeBase64Url(payloadSegment));
-    const userId = String(payload.sub ?? "");
-
-    if (!userId) {
-      throw new Error("Missing subject.");
-    }
-
-    return userId;
-  } catch {
-    throw new Error("Invalid admin session.");
-  }
+  return authHeader.replace("Bearer ", "");
 }
 
 export async function requireAdmin(request: Request) {
-  const userId = getVerifiedUserId(request);
+  const token = getToken(request);
   const supabase = createServiceClient();
+  const userResult = await supabase.auth.getUser(token);
+
+  if (userResult.error || !userResult.data.user) {
+    throw new Error("Invalid admin session.");
+  }
 
   const adminResult = await supabase
     .from("admin_profiles")
     .select("id, auth_user_id, email, role")
-    .eq("auth_user_id", userId)
+    .eq("auth_user_id", userResult.data.user.id)
     .maybeSingle();
 
   if (adminResult.error) {
@@ -55,8 +36,6 @@ export async function requireAdmin(request: Request) {
   return {
     admin: adminResult.data,
     supabase,
-    user: {
-      id: userId
-    }
+    user: userResult.data.user
   };
 }

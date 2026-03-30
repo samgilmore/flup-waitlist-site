@@ -43,14 +43,14 @@ app.innerHTML = `
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title" aria-label="Follow up like it matters.">
+        <h1 id="hero-title" aria-label="Follow Up. Stay top of mind.">
           <span class="hero-title-line">
             <span class="hero-title-mark-wrap">
               <img class="hero-title-mark" src="${flupForegroundIcon}" alt="FLUP hero icon" />
             </span>
-            <span class="hero-title-rest">ollow up like</span>
+            <span class="hero-title-rest">ollow Up.</span>
           </span>
-          <span class="hero-title-line">it matters.</span>
+          <span class="hero-title-line">Stay top of mind.</span>
         </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
         <p class="hero-stat" id="hero-stat">${buildHeroStatLoadingMarkup()}</p>

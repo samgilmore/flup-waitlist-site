@@ -43,7 +43,7 @@ Deno.serve(async (request) => {
 
     const userResult = await supabase
       .from("waitlist_users")
-      .select("id, created_at, email, first_name, referral_code, referral_count, status")
+      .select("id, created_at, email, first_name, phone_number, referral_code, referral_count, status")
       .eq("email", email)
       .maybeSingle<WaitlistUserRow>();
 

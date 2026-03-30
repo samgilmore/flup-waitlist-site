@@ -72,6 +72,8 @@ app.innerHTML = `
                   <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
                   <label for="first-name">First name <span class="field-optional">(optional)</span></label>
                   <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Name" />
+                  <label for="phone-number">Phone number <span class="field-optional">(optional)</span></label>
+                  <input id="phone-number" name="phoneNumber" type="tel" autocomplete="tel" placeholder="(312) 555-0199" />
                   <button type="submit">Join the waitlist</button>
                 </form>
 
@@ -322,6 +324,7 @@ waitlistForm.addEventListener("submit", async (event) => {
   const payload = {
     email: String(formData.get("email") ?? ""),
     firstName: String(formData.get("firstName") ?? ""),
+    phoneNumber: String(formData.get("phoneNumber") ?? ""),
     referralCode: savedReferralCode ?? null
   };
 

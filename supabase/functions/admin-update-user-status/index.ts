@@ -36,7 +36,7 @@ Deno.serve(async (request) => {
       .from("waitlist_users")
       .update({ status })
       .eq("id", userId)
-      .select("id, email, first_name, referral_count, status, created_at, referred_by_user_id")
+      .select("id, email, first_name, phone_number, referral_count, status, created_at, referred_by_user_id")
       .single();
 
     if (result.error) {

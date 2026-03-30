@@ -85,6 +85,7 @@ adminApp.innerHTML = `
             <thead>
               <tr>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Referrals</th>
                 <th>Status</th>
                 <th>Joined</th>
@@ -93,7 +94,7 @@ adminApp.innerHTML = `
             </thead>
             <tbody id="admin-table-body">
               <tr>
-                <td colspan="5">Sign in to load waitlist data.</td>
+                <td colspan="6">Sign in to load waitlist data.</td>
               </tr>
             </tbody>
           </table>
@@ -155,7 +156,7 @@ function getFriendlyError(error) {
 function renderEmptyState(message) {
   adminTableBody.innerHTML = `
     <tr>
-      <td colspan="5">${escapeHtml(message)}</td>
+      <td colspan="6">${escapeHtml(message)}</td>
     </tr>
   `;
 }
@@ -181,6 +182,7 @@ function renderRow(row) {
           <span>${escapeHtml(row.first_name || "No first name yet")}</span>
         </div>
       </td>
+      <td>${escapeHtml(row.phone_number || "—")}</td>
       <td>
         <div class="admin-referral-cell">
           <strong>${row.referral_count}</strong>

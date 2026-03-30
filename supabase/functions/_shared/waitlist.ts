@@ -6,6 +6,7 @@ export interface WaitlistUserRow {
   email: string;
   first_name: string | null;
   id: string;
+  phone_number?: string | null;
   referral_code: string;
   referral_count: number;
   status: WaitlistResponse["userStatus"];

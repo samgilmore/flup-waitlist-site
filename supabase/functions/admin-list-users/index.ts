@@ -26,7 +26,7 @@ Deno.serve(async (request) => {
 
     let query = supabase
       .from("waitlist_users")
-      .select("id, email, first_name, referral_count, status, created_at, referred_by_user_id")
+      .select("id, email, first_name, phone_number, referral_count, status, created_at, referred_by_user_id")
       .order("referral_count", { ascending: false })
       .order("created_at", { ascending: true })
       .limit(200);

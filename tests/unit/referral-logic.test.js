@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildReferralProgress,
   normalizeEmail,
+  normalizePhoneNumber,
   validateReferralAttribution
 } from "../../supabase/functions/_shared/referral.ts";
 
@@ -12,6 +13,11 @@ describe("shared referral logic", () => {
 
   it("caps progress percentage at one hundred", () => {
     expect(buildReferralProgress(7, 5).percent).toBe(100);
+  });
+
+  it("normalizes optional phone numbers by trimming or nulling blank values", () => {
+    expect(normalizePhoneNumber("  (312) 555-0199  ")).toBe("(312) 555-0199");
+    expect(normalizePhoneNumber("   ")).toBeNull();
   });
 
   it("rejects self referrals", () => {

@@ -2,6 +2,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 import {
   createReferralCode,
   normalizeEmail,
+  normalizePhoneNumber,
   validateReferralAttribution
 } from "../_shared/referral.ts";
 import {
@@ -63,6 +64,7 @@ Deno.serve(async (request) => {
 
     const email = normalizeEmail(String(body.email ?? ""));
     const firstName = String(body.firstName ?? "").trim() || null;
+    const phoneNumber = normalizePhoneNumber(String(body.phoneNumber ?? ""));
     const suppliedReferralCode = String(body.referralCode ?? "").trim().toUpperCase() || null;
 
     if (!isValidEmail(email)) {
@@ -71,7 +73,7 @@ Deno.serve(async (request) => {
 
     const existingResult = await supabase
       .from("waitlist_users")
-      .select("id, created_at, email, first_name, referral_code, referral_count, status")
+      .select("id, created_at, email, first_name, phone_number, referral_code, referral_count, status")
       .eq("email", email)
       .maybeSingle<WaitlistUserRow>();
 
@@ -107,7 +109,7 @@ Deno.serve(async (request) => {
     if (suppliedReferralCode) {
       const referrerResult = await supabase
         .from("waitlist_users")
-        .select("id, created_at, email, first_name, referral_code, referral_count, status")
+        .select("id, created_at, email, first_name, phone_number, referral_code, referral_count, status")
         .eq("referral_code", suppliedReferralCode)
         .maybeSingle();
 
@@ -128,10 +130,11 @@ Deno.serve(async (request) => {
       .insert({
         email,
         first_name: firstName,
+        phone_number: phoneNumber,
         referral_code: referralCode,
         referred_by_user_id: referrer?.id ?? null
       })
-      .select("id, created_at, email, first_name, referral_code, referral_count, status")
+      .select("id, created_at, email, first_name, phone_number, referral_code, referral_count, status")
       .single();
 
     if (createdUserResult.error) {

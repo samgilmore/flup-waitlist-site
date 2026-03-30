@@ -21,6 +21,7 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
   await expect(page.locator("#hero-stat .hero-stat-number")).toHaveText(/\d{1,3}(,\d{3})*/);
   await expect(page.locator("#hero-stat .hero-stat-label")).toHaveText("people already joined");
   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Phone number")).toBeVisible();
   await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.locator("#lookup-panel")).toBeHidden();
   await expect(page.locator("#result-card")).toBeHidden();

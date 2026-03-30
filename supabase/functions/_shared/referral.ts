@@ -2,6 +2,11 @@ export function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
+export function normalizePhoneNumber(phoneNumber: string) {
+  const normalized = phoneNumber.trim();
+  return normalized ? normalized : null;
+}
+
 export function buildReferralProgress(current: number, target = 5) {
   const safeCurrent = Math.max(0, Number(current) || 0);
   const safeTarget = Math.max(1, Number(target) || 1);

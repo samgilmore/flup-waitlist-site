@@ -1,20 +1,13 @@
 # Supabase Setup
 
-This repo is already linked to the existing project:
-
-- Organization: `FLUP`
-- Project: `FLUP Waitlist`
-- Ref: `jkfynpguzzbvinahqdfc`
-- Region: `us-west-2`
-
-If you ever need to recreate it from scratch, use the same shape below.
+Use this guide for either a fresh project or an existing Supabase project you want this repo to target.
 
 ## 1. Create the project
 
 1. Sign in to [Supabase](https://supabase.com/dashboard).
 2. Click `New project`.
 3. Choose the `FLUP` organization.
-4. Project name: `FLUP Waitlist`.
+4. Project name: choose your public-facing project name.
 5. Region: `us-west-2` unless your primary audience changes.
 6. Generate a strong database password and save it in a password manager.
 7. Wait for the project to finish provisioning and show healthy status.
@@ -43,7 +36,7 @@ Official references:
 3. Put them in `.env.local`:
 
 ```bash
-VITE_SUPABASE_URL="https://jkfynpguzzbvinahqdfc.supabase.co"
+VITE_SUPABASE_URL="https://<your-project-ref>.supabase.co"
 VITE_SUPABASE_ANON_KEY="<your-public-browser-key>"
 ```
 
@@ -85,7 +78,7 @@ Then log in and link:
 
 ```bash
 supabase login
-supabase link --project-ref jkfynpguzzbvinahqdfc
+supabase link --project-ref <your-project-ref>
 ```
 
 ## 6. Push the database schema
@@ -93,7 +86,7 @@ supabase link --project-ref jkfynpguzzbvinahqdfc
 From the repo root:
 
 ```bash
-supabase db push --project-ref jkfynpguzzbvinahqdfc
+supabase db push --project-ref <your-project-ref>
 ```
 
 That applies the migration in `supabase/migrations/20260330_000001_waitlist_schema.sql`.
@@ -104,7 +97,7 @@ Set the public site URL and the referral threshold:
 
 ```bash
 supabase secrets set \
-  --project-ref jkfynpguzzbvinahqdfc \
+  --project-ref <your-project-ref> \
   SITE_URL="https://<github-user>.github.io/<repo-name>/" \
   EARLY_ACCESS_REFERRAL_TARGET="5"
 ```
@@ -116,15 +109,15 @@ supabase secrets set \
 Public functions:
 
 ```bash
-supabase functions deploy signup-waitlist --project-ref jkfynpguzzbvinahqdfc --no-verify-jwt
-supabase functions deploy lookup-waitlist --project-ref jkfynpguzzbvinahqdfc --no-verify-jwt
+supabase functions deploy signup-waitlist --project-ref <your-project-ref> --no-verify-jwt
+supabase functions deploy lookup-waitlist --project-ref <your-project-ref> --no-verify-jwt
 ```
 
 Admin-only functions:
 
 ```bash
-supabase functions deploy admin-list-users --project-ref jkfynpguzzbvinahqdfc
-supabase functions deploy admin-update-user-status --project-ref jkfynpguzzbvinahqdfc
+supabase functions deploy admin-list-users --project-ref <your-project-ref> --no-verify-jwt
+supabase functions deploy admin-update-user-status --project-ref <your-project-ref> --no-verify-jwt
 ```
 
 Reference:

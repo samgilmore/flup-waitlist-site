@@ -4,6 +4,7 @@ import flupWordmark from "./assets/flup-wordmark.png";
 import flupAppIcon from "./assets/flup-ios-icon.png";
 import flupForegroundIcon from "./assets/flup-ios-icon-foreground.png";
 import { escapeHtml } from "./lib/html.js";
+import { formatUsPhoneNumber, normalizeUsPhoneNumber } from "./lib/phone.js";
 import { fetchWaitlistStats, lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
 import {
@@ -118,6 +119,7 @@ const lookupBack = document.querySelector("#lookup-back");
 const lookupPanel = document.querySelector("#lookup-panel");
 const lookupToggle = document.querySelector("#lookup-toggle");
 const lookupStage = document.querySelector("#lookup-stage");
+const phoneNumberInput = document.querySelector("#phone-number");
 const heroStat = document.querySelector("#hero-stat");
 const resultCard = document.querySelector("#result-card");
 const formMessage = document.querySelector("#form-message");
@@ -318,13 +320,26 @@ lookupBack.addEventListener("click", () => {
   signupInput.focus();
 });
 
+phoneNumberInput.addEventListener("input", () => {
+  phoneNumberInput.value = formatUsPhoneNumber(phoneNumberInput.value);
+});
+
 waitlistForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(waitlistForm);
+  const rawPhoneNumber = String(formData.get("phoneNumber") ?? "");
+  const normalizedPhoneNumber = normalizeUsPhoneNumber(rawPhoneNumber);
+
+  if (rawPhoneNumber.trim() && !normalizedPhoneNumber) {
+    setMessage("Please enter a valid 10-digit phone number or leave it blank.", "error");
+    phoneNumberInput.focus();
+    return;
+  }
+
   const payload = {
     email: String(formData.get("email") ?? ""),
     firstName: String(formData.get("firstName") ?? ""),
-    phoneNumber: String(formData.get("phoneNumber") ?? ""),
+    phoneNumber: normalizedPhoneNumber ?? "",
     referralCode: savedReferralCode ?? null
   };
 

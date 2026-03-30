@@ -17,7 +17,10 @@ describe("shared referral logic", () => {
 
   it("normalizes optional phone numbers by trimming or nulling blank values", () => {
     expect(normalizePhoneNumber("  (312) 555-0199  ")).toBe("(312) 555-0199");
+    expect(normalizePhoneNumber("3125550199")).toBe("(312) 555-0199");
+    expect(normalizePhoneNumber("+1 (312) 555-0199")).toBe("(312) 555-0199");
     expect(normalizePhoneNumber("   ")).toBeNull();
+    expect(() => normalizePhoneNumber("3125550")).toThrow(/10-digit phone number/i);
   });
 
   it("rejects self referrals", () => {

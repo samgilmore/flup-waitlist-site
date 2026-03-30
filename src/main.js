@@ -151,7 +151,7 @@ function renderResultCard(payload) {
       <div class="result-stats">
         ${
           Number.isFinite(payload.waitlistPosition)
-            ? `<p class="result-stat">${escapeHtml(buildWaitlistPositionLabel(payload.waitlistPosition))}</p>`
+            ? `<p class="result-stat result-stat--highlight">${escapeHtml(buildWaitlistPositionLabel(payload.waitlistPosition))}</p>`
             : ""
         }
       </div>
@@ -167,7 +167,7 @@ function renderResultCard(payload) {
     <p class="result-email">Signed up with <strong>${escapeHtml(payload.email ?? "")}</strong></p>
     ${resultStatsMarkup}
     <p class="result-copy">${escapeHtml(bodyCopy)}</p>
-    <div class="result-stack">
+    <div class="result-stack result-stack--link">
       <p><strong>Referral link</strong></p>
       <a class="result-link" href="${escapeHtml(referralLink)}">${escapeHtml(referralLink)}</a>
     </div>

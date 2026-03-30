@@ -429,6 +429,21 @@
   color: rgba(17, 24, 39, 0.82);
 }
 
+.result-stat--highlight {
+  justify-self: start;
+  padding: 0.72rem 0.9rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(232, 244, 255, 0.96) 0%, rgba(246, 250, 255, 0.9) 100%);
+  border: 1px solid rgba(103, 170, 233, 0.2);
+  box-shadow: 0 12px 28px rgba(90, 132, 179, 0.12);
+  font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.06rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: rgba(17, 24, 39, 0.94);
+}
+
 .result-stat--muted {
   font-size: 0.92rem;
   font-weight: 600;
@@ -447,9 +462,27 @@
   color: rgba(17, 24, 39, 0.67);
 }
 
+.result-stack--link {
+  gap: 0.55rem;
+  padding: 0.88rem 0.92rem 0.95rem;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(244, 249, 255, 0.88) 100%);
+  border: 1px solid rgba(97, 156, 213, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 14px 30px rgba(87, 128, 173, 0.08);
+}
+
+.result-stack--link p {
+  color: rgba(17, 24, 39, 0.6);
+}
+
 .result-link {
+  display: inline-block;
   color: #131f39;
-  font-weight: 600;
+  font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-decoration: none;
   word-break: break-all;
 }

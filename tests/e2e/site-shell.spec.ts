@@ -11,4 +11,10 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
   await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.locator("#lookup-panel")).toBeHidden();
   await expect(page.locator("#result-card")).toBeHidden();
+
+  const ambientAnimationName = await page.locator(".ambient-one").evaluate((element) => {
+    return window.getComputedStyle(element).animationName;
+  });
+
+  expect(ambientAnimationName).not.toBe("none");
 });

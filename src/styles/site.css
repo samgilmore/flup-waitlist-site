@@ -10,6 +10,31 @@
   padding: 1.25rem clamp(1rem, 3vw, 2rem) 2rem;
 }
 
+.shell::before,
+.shell::after {
+  content: "";
+  position: absolute;
+  inset: -8% -6%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shell::before {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(150, 220, 255, 0.28), transparent 28%),
+    radial-gradient(circle at 78% 28%, rgba(255, 226, 206, 0.28), transparent 30%),
+    radial-gradient(circle at 50% 82%, rgba(192, 235, 255, 0.12), transparent 26%);
+  animation: breathe-glow 16s ease-in-out infinite;
+}
+
+.shell::after {
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255, 255, 255, 0.3), transparent 18%),
+    radial-gradient(circle at 80% 24%, rgba(255, 255, 255, 0.22), transparent 16%);
+  opacity: 0.7;
+  animation: breathe-shift 20s ease-in-out infinite;
+}
+
 .ambient {
   position: absolute;
   border-radius: 999px;
@@ -134,9 +159,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 0.84em;
+  width: 0.72em;
   height: 0.94em;
-  margin-right: -0.04em;
+  margin-right: -0.13em;
 }
 
 .hero-title-mark {
@@ -144,6 +169,7 @@
   height: 0.84em;
   object-fit: contain;
   filter: drop-shadow(0 14px 26px rgba(24, 34, 52, 0.16));
+  transform: translateX(0.03em);
   animation: icon-pulse 7s ease-in-out infinite;
 }
 
@@ -393,44 +419,70 @@
 @keyframes drift-one {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate3d(1.25rem, 1rem, 0);
+    transform: translate3d(1.1rem, 0.85rem, 0) scale(1.06);
   }
 }
 
 @keyframes drift-two {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate3d(-1.5rem, 1rem, 0);
+    transform: translate3d(-1.35rem, 0.9rem, 0) scale(1.08);
   }
 }
 
 @keyframes drift-three {
   0%,
   100% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate3d(calc(-50% + 1rem), -0.8rem, 0);
+    transform: translate3d(calc(-50% + 0.9rem), -0.7rem, 0) scale(1.05);
   }
 }
 
 @keyframes icon-pulse {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateX(0.03em) translateY(0);
   }
 
   50% {
-    transform: translateY(-0.12rem);
+    transform: translateX(0.03em) translateY(-0.12rem);
+  }
+}
+
+@keyframes breathe-glow {
+  0%,
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    opacity: 0.85;
+  }
+
+  50% {
+    transform: scale(1.04) translate3d(0, -0.6rem, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes breathe-shift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: translate3d(0.8rem, -0.5rem, 0);
+    opacity: 0.82;
   }
 }
 

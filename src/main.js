@@ -1,6 +1,7 @@
 import "./styles/base.css";
 import "./styles/site.css";
 import { valuePoints } from "./lib/content.js";
+import { escapeHtml } from "./lib/html.js";
 import { lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
 import {
@@ -99,21 +100,21 @@ function setMessage(message, tone = "neutral") {
 function renderResultCard(payload) {
   const progress = getRewardProgress(payload.referralCount ?? 0, payload.rewardTarget ?? 5);
   const referralLink = payload.referralLink ?? buildReferralLink(payload.referralCode);
+  const heading = progress.unlocked ? "Early access unlocked" : "You’re on the list";
+  const bodyCopy = progress.unlocked
+    ? "You hit the early-access threshold."
+    : `Invite ${progress.remaining} more ${progress.remaining === 1 ? "friend" : "friends"} to unlock early access.`;
 
   resultCard.hidden = false;
   resultCard.innerHTML = `
     <div class="result-header">
       <p class="eyebrow">Your invite</p>
-      <h3>${progress.unlocked ? "Early access unlocked" : "You’re on the list"}</h3>
+      <h3>${escapeHtml(heading)}</h3>
     </div>
-    <p class="result-copy">
-      ${progress.unlocked
-        ? "You hit the early-access threshold."
-        : `Invite ${progress.remaining} more ${progress.remaining === 1 ? "friend" : "friends"} to unlock early access.`}
-    </p>
+    <p class="result-copy">${escapeHtml(bodyCopy)}</p>
     <div class="result-stack">
       <p><strong>Referral link</strong></p>
-      <a class="result-link" href="${referralLink}">${referralLink}</a>
+      <a class="result-link" href="${escapeHtml(referralLink)}">${escapeHtml(referralLink)}</a>
     </div>
     <div class="progress-row" aria-label="Referral progress">
       <span>${progress.current}/${progress.target} successful referrals</span>

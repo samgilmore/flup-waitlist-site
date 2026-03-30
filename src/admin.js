@@ -29,7 +29,9 @@ adminApp.innerHTML = `
           <label for="admin-password">Password</label>
           <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
 
-          <button type="submit">Sign in</button>
+          <div class="admin-form-actions">
+            <button type="submit">Try sign in</button>
+          </div>
         </form>
 
         <p class="admin-message" id="admin-message" aria-live="polite" hidden></p>
@@ -57,7 +59,9 @@ adminApp.innerHTML = `
             <option value="10">10+ referrals</option>
           </select>
 
-          <button type="submit">Refresh</button>
+          <div class="admin-filter-actions">
+            <button type="submit">Refresh data</button>
+          </div>
         </form>
 
         <div class="admin-table-shell">

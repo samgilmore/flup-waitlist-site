@@ -120,11 +120,64 @@ const heroStat = document.querySelector("#hero-stat");
 const resultCard = document.querySelector("#result-card");
 const formMessage = document.querySelector("#form-message");
 const signupStage = document.querySelector("#signup-stage");
+let resultActionTimeoutId = null;
 
 function setMessage(message, tone = "neutral") {
   formMessage.hidden = !message;
   formMessage.dataset.tone = tone;
   formMessage.textContent = message;
+}
+
+function setResultActionFeedback(message, tone = "neutral") {
+  const feedback = resultCard.querySelector("#result-action-feedback");
+
+  if (!feedback) {
+    return;
+  }
+
+  if (resultActionTimeoutId) {
+    window.clearTimeout(resultActionTimeoutId);
+    resultActionTimeoutId = null;
+  }
+
+  feedback.hidden = !message;
+  feedback.dataset.tone = tone;
+  feedback.textContent = message;
+
+  if (message) {
+    resultActionTimeoutId = window.setTimeout(() => {
+      feedback.hidden = true;
+      feedback.textContent = "";
+      delete feedback.dataset.tone;
+      resultActionTimeoutId = null;
+    }, 2200);
+  }
+}
+
+function shouldShowShareAction() {
+  return typeof navigator.share === "function" && window.matchMedia("(max-width: 760px)").matches;
+}
+
+async function copyToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "absolute";
+  textarea.style.left = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+
+  const copied = document.execCommand("copy");
+  textarea.remove();
+
+  if (!copied) {
+    throw new Error("Clipboard write failed");
+  }
 }
 
 function setCardMode(mode) {
@@ -141,6 +194,7 @@ function updateHeroStat(totalSignups) {
 function renderResultCard(payload) {
   const progress = getRewardProgress(payload.referralCount ?? 0, payload.rewardTarget ?? 5);
   const referralLink = payload.referralLink ?? buildReferralLink(payload.referralCode);
+  const showShareAction = shouldShowShareAction();
   const heading = progress.unlocked ? "Early access unlocked" : "You’re on the list";
   const bodyCopy = progress.unlocked
     ? "You hit the early-access threshold."
@@ -159,6 +213,7 @@ function renderResultCard(payload) {
     : "";
 
   resultCard.hidden = false;
+  resultCard.dataset.referralLink = referralLink;
   resultCard.innerHTML = `
     <div class="result-header">
       <p class="eyebrow">Your invite</p>
@@ -169,7 +224,18 @@ function renderResultCard(payload) {
     <p class="result-copy">${escapeHtml(bodyCopy)}</p>
     <div class="result-stack result-stack--link">
       <p><strong>Referral link</strong></p>
-      <a class="result-link" href="${escapeHtml(referralLink)}">${escapeHtml(referralLink)}</a>
+      <div class="result-link-row">
+        <a class="result-link" href="${escapeHtml(referralLink)}">${escapeHtml(referralLink)}</a>
+        <div class="result-link-actions">
+          <button class="result-action-button" type="button" data-result-action="copy">Copy link</button>
+          ${
+            showShareAction
+              ? '<button class="result-action-button result-action-button--secondary" type="button" data-result-action="share">Share</button>'
+              : ""
+          }
+        </div>
+      </div>
+      <p class="result-action-feedback" id="result-action-feedback" aria-live="polite" hidden></p>
     </div>
     <div class="progress-row" aria-label="Referral progress">
       <span>${progress.current}/${progress.target} successful referrals</span>
@@ -177,6 +243,51 @@ function renderResultCard(payload) {
     </div>
   `;
 }
+
+resultCard.addEventListener("click", async (event) => {
+  const actionButton = event.target.closest("[data-result-action]");
+
+  if (!(actionButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const referralLink = resultCard.dataset.referralLink;
+
+  if (!referralLink) {
+    return;
+  }
+
+  const { resultAction } = actionButton.dataset;
+
+  actionButton.disabled = true;
+
+  try {
+    if (resultAction === "copy") {
+      await copyToClipboard(referralLink);
+      setResultActionFeedback("Link copied.");
+      return;
+    }
+
+    if (resultAction === "share" && typeof navigator.share === "function") {
+      await navigator.share({
+        title: "Join FLUP",
+        text: "Join the FLUP waitlist.",
+        url: referralLink
+      });
+    }
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      return;
+    }
+
+    setResultActionFeedback(
+      resultAction === "share" ? "Couldn’t open share sheet." : "Couldn’t copy link.",
+      "error"
+    );
+  } finally {
+    actionButton.disabled = false;
+  }
+});
 
 if (savedWaitlistState) {
   renderResultCard(savedWaitlistState);

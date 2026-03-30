@@ -4,7 +4,7 @@ test("landing page shows hero, value section, signup, and lookup path", async ({
   await page.goto("/");
 
   await expect(page).toHaveTitle("Join FLUP");
-  await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/src/assets/flup-ios-icon.png");
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/src/assets/flup-favicon.png");
   await expect(page.getByText("A smarter way to keep relationships warm and your network moving.")).toBeVisible();
   await expect(page.getByText(/private beta waitlist/i)).toHaveCount(0);
   await expect(page.getByText(/waitlist now open/i)).toHaveCount(0);

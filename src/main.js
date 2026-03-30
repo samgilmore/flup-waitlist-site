@@ -1,8 +1,7 @@
 import "./styles/base.css";
 import "./styles/site.css";
-import { valuePoints } from "./lib/content.js";
 import flupWordmark from "./assets/flup-wordmark.png";
-import flupIcon from "./assets/flup-ios-icon.png";
+import flupAppIcon from "./assets/flup-ios-icon.png";
 import flupForegroundIcon from "./assets/flup-ios-icon-foreground.png";
 import { escapeHtml } from "./lib/html.js";
 import { lookupWaitlist, signupWaitlist } from "./lib/api.js";
@@ -15,18 +14,6 @@ import {
 } from "./lib/storage.js";
 
 const app = document.querySelector("#app");
-
-const valueMarkup = valuePoints
-  .map(
-    ({ title, description }) => `
-      <article class="value-card">
-        <span class="value-kicker">FLUP</span>
-        <h2>${title}</h2>
-        <p>${description}</p>
-      </article>
-    `
-  )
-  .join("");
 
 const savedReferralCode = getReferralCodeFromUrl(window.location.href) ?? getSavedReferralCode();
 const savedWaitlistState = getSavedWaitlistState();
@@ -42,22 +29,33 @@ app.innerHTML = `
     <div class="ambient ambient-three" aria-hidden="true"></div>
 
     <header class="topbar">
-      <img class="brand-wordmark" src="${flupWordmark}" alt="FLUP wordmark" />
-      <span class="topbar-note">Private beta waitlist</span>
+      <div class="brand-lockup">
+        <img class="brand-app-icon" src="${flupAppIcon}" alt="FLUP app icon" />
+        <img class="brand-wordmark" src="${flupWordmark}" alt="FLUP wordmark" />
+      </div>
     </header>
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">Waitlist now open</p>
-        <h1 id="hero-title">Follow up like it matters.</h1>
+        <h1 id="hero-title" aria-label="Follow up like it matters.">
+          <span class="hero-title-line">
+            <span class="hero-title-mark-wrap">
+              <img class="hero-title-mark" src="${flupForegroundIcon}" alt="FLUP hero icon" />
+            </span>
+            <span class="hero-title-rest">ollow up like</span>
+          </span>
+          <span class="hero-title-line">it matters.</span>
+        </h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
-        <p class="launch-note">Join for launch updates now. Hit five successful referrals and unlock early access.</p>
 
         <div class="hero-actions">
           <section class="signup-panel" aria-labelledby="signup-title">
             <div class="signup-copy">
-              <p class="eyebrow">Join early</p>
-              <h2 id="signup-title">Be first to hear when FLUP goes live.</h2>
+              <h2 id="signup-title" aria-label="Be first to hear when FLUP goes live.">
+                <span>Be first to hear when</span>
+                <img class="inline-wordmark" src="${flupWordmark}" alt="" aria-hidden="true" />
+                <span>goes live.</span>
+              </h2>
             </div>
 
             <form class="waitlist-form" id="waitlist-form">
@@ -83,28 +81,10 @@ app.innerHTML = `
           </section>
         </div>
       </div>
-
-      <figure class="hero-visual" role="img" aria-label="Hero artwork">
-        <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
-        <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
-        <div class="hero-sheen" aria-hidden="true"></div>
-        <div class="hero-icon-stack" aria-hidden="true">
-          <img class="hero-icon hero-icon-back" src="${flupIcon}" alt="" />
-          <img class="hero-icon hero-icon-front" src="${flupForegroundIcon}" alt="" />
-        </div>
-        <figcaption class="hero-visual-caption">
-          <span>Private beta</span>
-          <strong>5 referrals unlock early access</strong>
-        </figcaption>
-      </figure>
-    </section>
-
-    <section class="value-grid" aria-label="Why FLUP">
-      ${valueMarkup}
     </section>
 
     <footer class="footer">
-      <p>Built for early-career people who want to keep good momentum with the right people.</p>
+      <p>Copyright 2026 FLUP</p>
     </footer>
   </main>
 `;

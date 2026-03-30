@@ -4,8 +4,12 @@ test("landing page shows hero, value section, signup, and lookup path", async ({
   await page.goto("/");
 
   await expect(page.getByText("A smarter way to keep relationships warm and your network moving.")).toBeVisible();
-  await expect(page.getByText(/join for launch updates now/i)).toBeVisible();
-  await expect(page.getByText(/remember context/i)).toBeVisible();
-  await expect(page.locator(".hero-actions").getByRole("button", { name: /join the waitlist/i })).toBeVisible();
+  await expect(page.getByText(/private beta waitlist/i)).toHaveCount(0);
+  await expect(page.getByText(/waitlist now open/i)).toHaveCount(0);
+  await expect(page.getByText(/remember context/i)).toHaveCount(0);
+  await expect(page.getByText(/built for early-career/i)).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: /be first to hear when flup goes live/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /check your status/i })).toBeVisible();
+  await expect(page.getByText(/copyright 2026 flup/i)).toBeVisible();
 });

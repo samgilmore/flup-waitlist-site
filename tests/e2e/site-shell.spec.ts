@@ -37,7 +37,20 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
     return elements.map((element) => Number.parseFloat(window.getComputedStyle(element).fontSize));
   });
 
+  const heroLineGap = await page.locator("#hero-title").evaluate((element) => {
+    const lines = Array.from(element.querySelectorAll(".hero-title-line"));
+    const firstRect = lines[0]?.getBoundingClientRect();
+    const secondRect = lines[1]?.getBoundingClientRect();
+
+    if (!firstRect || !secondRect) {
+      return 0;
+    }
+
+    return secondRect.top - firstRect.bottom;
+  });
+
   expect(ambientAnimationName).not.toBe("none");
   expect(resultCardIsSeparate).toBe(true);
   expect(heroLineSizes[1]).toBeLessThan(heroLineSizes[0]);
+  expect(heroLineGap).toBeGreaterThan(12);
 });

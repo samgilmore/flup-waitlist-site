@@ -141,7 +141,7 @@
 
 .hero h1 {
   display: grid;
-  gap: 0.1em;
+  gap: 0.14em;
   justify-items: center;
   font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
   font-size: clamp(3.1rem, 8vw, 6.4rem);

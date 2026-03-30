@@ -49,38 +49,50 @@ app.innerHTML = `
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
 
         <div class="hero-actions">
-          <section class="signup-panel" aria-labelledby="signup-title">
-            <div class="signup-copy">
-              <h2 id="signup-title" aria-label="Be first to hear when FLUP goes live.">
-                <span>Be first to hear when</span>
-                <img class="inline-wordmark" src="${flupWordmark}" alt="" aria-hidden="true" />
-                <span>goes live.</span>
-              </h2>
-            </div>
+          <div class="hero-panel-stack">
+            <section class="signup-panel" aria-labelledby="signup-title">
+              <div class="signup-stage" id="signup-stage">
+                <div class="signup-copy">
+                  <h2 id="signup-title" aria-label="Be first to hear when FLUP goes live.">
+                    <span>Be first to hear when</span>
+                    <img class="inline-wordmark" src="${flupWordmark}" alt="" aria-hidden="true" />
+                    <span>goes live.</span>
+                  </h2>
+                </div>
 
-            <form class="waitlist-form" id="waitlist-form">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
-              <label for="first-name">First name <span class="field-optional">(optional)</span></label>
-              <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Sam" />
-              <button type="submit">Join the waitlist</button>
-            </form>
+                <form class="waitlist-form" id="waitlist-form">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                  <label for="first-name">First name <span class="field-optional">(optional)</span></label>
+                  <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Name" />
+                  <button type="submit">Join the waitlist</button>
+                </form>
 
-            <p class="reward-hint">Refer 5 friends for early access.</p>
+                <p class="reward-hint">Refer 5 friends for early access.</p>
 
-            <button class="lookup-button" id="lookup-toggle" type="button">Already joined? Check your status</button>
+                <button class="lookup-button" id="lookup-toggle" type="button">Already joined? Check your status</button>
+              </div>
 
-            <section class="lookup-panel" id="lookup-panel" hidden>
-              <form class="lookup-form" id="lookup-form">
-                <label for="lookup-email">Lookup email</label>
-                <input id="lookup-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
-                <button type="submit">Find my invite</button>
-              </form>
+              <div class="lookup-stage" id="lookup-stage" hidden>
+                <button class="back-button" id="lookup-back" type="button" aria-label="Back to signup">← Back</button>
+                <div class="signup-copy lookup-copy">
+                  <h2>Check your status</h2>
+                </div>
+
+                <section class="lookup-panel" id="lookup-panel">
+                  <form class="lookup-form" id="lookup-form">
+                    <label for="lookup-email">Lookup email</label>
+                    <input id="lookup-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                    <button type="submit">Find my invite</button>
+                  </form>
+                </section>
+              </div>
+
+              <p class="form-message" id="form-message" aria-live="polite"></p>
             </section>
 
             <section class="result-card" id="result-card" hidden aria-live="polite"></section>
-            <p class="form-message" id="form-message" aria-live="polite"></p>
-          </section>
+          </div>
         </div>
       </div>
     </section>
@@ -93,14 +105,24 @@ app.innerHTML = `
 
 const waitlistForm = document.querySelector("#waitlist-form");
 const lookupForm = document.querySelector("#lookup-form");
+const lookupBack = document.querySelector("#lookup-back");
 const lookupPanel = document.querySelector("#lookup-panel");
 const lookupToggle = document.querySelector("#lookup-toggle");
+const lookupStage = document.querySelector("#lookup-stage");
 const resultCard = document.querySelector("#result-card");
 const formMessage = document.querySelector("#form-message");
+const signupStage = document.querySelector("#signup-stage");
 
 function setMessage(message, tone = "neutral") {
   formMessage.dataset.tone = tone;
   formMessage.textContent = message;
+}
+
+function setCardMode(mode) {
+  const showLookup = mode === "lookup";
+
+  signupStage.hidden = showLookup;
+  lookupStage.hidden = !showLookup;
 }
 
 function renderResultCard(payload) {
@@ -117,6 +139,7 @@ function renderResultCard(payload) {
       <p class="eyebrow">Your invite</p>
       <h3>${escapeHtml(heading)}</h3>
     </div>
+    <p class="result-email">Signed up with <strong>${escapeHtml(payload.email ?? "")}</strong></p>
     <p class="result-copy">${escapeHtml(bodyCopy)}</p>
     <div class="result-stack">
       <p><strong>Referral link</strong></p>
@@ -134,12 +157,15 @@ if (savedWaitlistState) {
 }
 
 lookupToggle.addEventListener("click", () => {
-  lookupPanel.hidden = !lookupPanel.hidden;
+  setCardMode("lookup");
+  const lookupInput = document.querySelector("#lookup-email");
+  lookupInput.focus();
+});
 
-  if (!lookupPanel.hidden) {
-    const lookupInput = document.querySelector("#lookup-email");
-    lookupInput.focus();
-  }
+lookupBack.addEventListener("click", () => {
+  setCardMode("signup");
+  const signupInput = document.querySelector("#email");
+  signupInput.focus();
 });
 
 waitlistForm.addEventListener("submit", async (event) => {

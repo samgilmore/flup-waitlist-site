@@ -186,9 +186,15 @@
 
 .hero-actions {
   width: min(100%, 34.5rem);
-  display: flex;
-  justify-content: center;
+  display: grid;
+  justify-items: center;
   padding-top: 0.55rem;
+}
+
+.hero-panel-stack {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
 }
 
 .signup-panel {
@@ -204,9 +210,24 @@
   box-shadow: 0 28px 70px rgba(88, 132, 182, 0.17);
 }
 
+.signup-stage,
+.lookup-stage {
+  display: grid;
+  gap: 1rem;
+}
+
+.signup-stage[hidden],
+.lookup-stage[hidden] {
+  display: none !important;
+}
+
 .signup-copy {
   display: flex;
   justify-content: center;
+}
+
+.lookup-copy h2 {
+  max-width: none;
 }
 
 .signup-copy h2 {
@@ -299,6 +320,22 @@
   font-weight: 600;
 }
 
+.back-button {
+  justify-self: start;
+  min-height: 2.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(17, 24, 39, 0.6);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  color: rgba(17, 24, 39, 0.92);
+  transform: translateX(-2px);
+}
+
 .lookup-button {
   justify-self: center;
   min-height: 2.6rem;
@@ -339,6 +376,11 @@
   padding: 1rem 1.05rem;
   text-align: left;
   animation: fade-up 0.4s ease both;
+}
+
+.result-email {
+  margin: 0;
+  color: rgba(17, 24, 39, 0.6);
 }
 
 .result-header,

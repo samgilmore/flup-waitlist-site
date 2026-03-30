@@ -16,5 +16,10 @@ test("public shell shows FLUP hero and waitlist form", async ({ page }) => {
     return window.getComputedStyle(element).animationName;
   });
 
+  const resultCardIsSeparate = await page.locator("#result-card").evaluate((element) => {
+    return !element.closest(".signup-panel") && element.parentElement?.classList.contains("hero-panel-stack");
+  });
+
   expect(ambientAnimationName).not.toBe("none");
+  expect(resultCardIsSeparate).toBe(true);
 });

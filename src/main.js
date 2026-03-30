@@ -1,6 +1,9 @@
 import "./styles/base.css";
 import "./styles/site.css";
 import { valuePoints } from "./lib/content.js";
+import flupWordmark from "./assets/flup-wordmark.png";
+import flupIcon from "./assets/flup-ios-icon.png";
+import flupForegroundIcon from "./assets/flup-ios-icon-foreground.png";
 import { escapeHtml } from "./lib/html.js";
 import { lookupWaitlist, signupWaitlist } from "./lib/api.js";
 import { buildReferralLink, getReferralCodeFromUrl, getRewardProgress } from "./lib/referral-state.js";
@@ -17,6 +20,7 @@ const valueMarkup = valuePoints
   .map(
     ({ title, description }) => `
       <article class="value-card">
+        <span class="value-kicker">FLUP</span>
         <h2>${title}</h2>
         <p>${description}</p>
       </article>
@@ -33,9 +37,13 @@ if (savedReferralCode) {
 
 app.innerHTML = `
   <main class="shell">
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <div class="ambient ambient-three" aria-hidden="true"></div>
+
     <header class="topbar">
-      <span class="brand-mark" aria-hidden="true">F</span>
-      <span class="brand-copy">FLUP</span>
+      <img class="brand-wordmark" src="${flupWordmark}" alt="FLUP wordmark" />
+      <span class="topbar-note">Private beta waitlist</span>
     </header>
 
     <section class="hero" aria-labelledby="hero-title">
@@ -43,45 +51,61 @@ app.innerHTML = `
         <p class="eyebrow">Waitlist now open</p>
         <h1 id="hero-title">Follow up like it matters.</h1>
         <p class="subcopy">A smarter way to keep relationships warm and your network moving.</p>
+        <p class="launch-note">Join for launch updates now. Hit five successful referrals and unlock early access.</p>
+
+        <div class="hero-actions">
+          <section class="signup-panel" aria-labelledby="signup-title">
+            <div class="signup-copy">
+              <p class="eyebrow">Join early</p>
+              <h2 id="signup-title">Be first to hear when FLUP goes live.</h2>
+            </div>
+
+            <form class="waitlist-form" id="waitlist-form">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+              <label for="first-name">First name <span class="field-optional">(optional)</span></label>
+              <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Sam" />
+              <button type="submit">Join the waitlist</button>
+            </form>
+
+            <button class="lookup-button" id="lookup-toggle" type="button">Already joined? Check your status</button>
+
+            <section class="lookup-panel" id="lookup-panel" hidden>
+              <form class="lookup-form" id="lookup-form">
+                <label for="lookup-email">Lookup email</label>
+                <input id="lookup-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                <button type="submit">Find my invite</button>
+              </form>
+            </section>
+
+            <section class="result-card" id="result-card" hidden aria-live="polite"></section>
+            <p class="form-message" id="form-message" aria-live="polite"></p>
+          </section>
+        </div>
       </div>
 
-      <aside class="hero-note" aria-label="Launch promise">
-        <p class="hero-note-title">Get on the list</p>
-        <p>Join for launch updates now. Hit five successful referrals and unlock early access.</p>
-      </aside>
+      <figure class="hero-visual" role="img" aria-label="Hero artwork">
+        <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+        <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+        <div class="hero-sheen" aria-hidden="true"></div>
+        <div class="hero-icon-stack" aria-hidden="true">
+          <img class="hero-icon hero-icon-back" src="${flupIcon}" alt="" />
+          <img class="hero-icon hero-icon-front" src="${flupForegroundIcon}" alt="" />
+        </div>
+        <figcaption class="hero-visual-caption">
+          <span>Private beta</span>
+          <strong>5 referrals unlock early access</strong>
+        </figcaption>
+      </figure>
     </section>
 
     <section class="value-grid" aria-label="Why FLUP">
       ${valueMarkup}
     </section>
 
-    <section class="signup-panel" aria-labelledby="signup-title">
-      <div class="signup-copy">
-        <p class="eyebrow">Join early</p>
-        <h2 id="signup-title">Get launch updates before everyone else.</h2>
-      </div>
-
-      <form class="waitlist-form" id="waitlist-form">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required />
-        <label for="first-name">First name <span class="field-optional">(optional)</span></label>
-        <input id="first-name" name="firstName" type="text" autocomplete="given-name" />
-        <button type="submit">Join the waitlist</button>
-      </form>
-
-      <button class="lookup-button" id="lookup-toggle" type="button">Check your status</button>
-
-      <section class="lookup-panel" id="lookup-panel" hidden>
-        <form class="lookup-form" id="lookup-form">
-          <label for="lookup-email">Lookup email</label>
-          <input id="lookup-email" name="email" type="email" autocomplete="email" required />
-          <button type="submit">Find my invite</button>
-        </form>
-      </section>
-
-      <section class="result-card" id="result-card" hidden aria-live="polite"></section>
-      <p class="form-message" id="form-message" aria-live="polite"></p>
-    </section>
+    <footer class="footer">
+      <p>Built for early-career people who want to keep good momentum with the right people.</p>
+    </footer>
   </main>
 `;
 

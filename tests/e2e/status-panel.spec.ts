@@ -5,6 +5,7 @@ test("lookup button reveals the status lookup panel", async ({ page }) => {
 
   await page.getByRole("button", { name: "Check your status" }).click();
 
+  await expect(page.locator(".hero-actions .lookup-panel")).toBeVisible();
   await expect(page.getByLabel("Lookup email")).toBeVisible();
   await expect(page.getByRole("button", { name: "Find my invite" })).toBeVisible();
 });

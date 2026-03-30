@@ -4,7 +4,8 @@ test("landing page shows hero, value section, signup, and lookup path", async ({
   await page.goto("/");
 
   await expect(page.getByText("A smarter way to keep relationships warm and your network moving.")).toBeVisible();
+  await expect(page.getByText(/join for launch updates now/i)).toBeVisible();
   await expect(page.getByText(/remember context/i)).toBeVisible();
-  await expect(page.getByRole("button", { name: /join the waitlist/i })).toBeVisible();
+  await expect(page.locator(".hero-actions").getByRole("button", { name: /join the waitlist/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /check your status/i })).toBeVisible();
 });

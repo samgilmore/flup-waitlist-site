@@ -3,11 +3,11 @@
   isolation: isolate;
   overflow: clip;
   min-height: 100vh;
-  width: min(100%, 82rem);
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  padding: 1.25rem 1.25rem 2rem;
+  padding: 1.25rem clamp(1rem, 3vw, 2rem) 2rem;
 }
 
 .ambient {
@@ -51,7 +51,7 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 0.35rem 0 1.5rem;
   animation: fade-up 0.7s ease both;
 }
@@ -63,15 +63,15 @@
 }
 
 .brand-app-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.72rem;
-  box-shadow: 0 14px 28px rgba(77, 122, 171, 0.18);
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.45rem;
+  box-shadow: 0 10px 22px rgba(77, 122, 171, 0.16);
 }
 
 .brand-wordmark {
   width: auto;
-  height: clamp(1.2rem, 2.6vw, 1.9rem);
+  height: clamp(0.8rem, 1.5vw, 1rem);
   object-fit: contain;
 }
 
@@ -134,9 +134,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1em;
+  width: 0.84em;
   height: 0.94em;
-  margin-right: 0.03em;
+  margin-right: -0.04em;
 }
 
 .hero-title-mark {
@@ -197,7 +197,7 @@
 }
 
 .inline-wordmark {
-  height: 1em;
+  height: 0.75em;
   width: auto;
   object-fit: contain;
   transform: translateY(0.02em);
@@ -265,6 +265,14 @@
   color: rgba(17, 24, 39, 0.45);
 }
 
+.reward-hint {
+  margin: -0.15rem 0 0;
+  text-align: center;
+  color: rgba(17, 24, 39, 0.52);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .lookup-button {
   justify-self: center;
   min-height: 2.6rem;
@@ -287,6 +295,11 @@
   border: 1px solid rgba(17, 24, 39, 0.07);
   background: rgba(251, 253, 255, 0.8);
   box-shadow: 0 14px 34px rgba(84, 116, 156, 0.1);
+}
+
+.lookup-panel[hidden],
+.result-card[hidden] {
+  display: none !important;
 }
 
 .lookup-panel {
@@ -427,9 +440,9 @@
   }
 
   .brand-app-icon {
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 0.64rem;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 0.4rem;
   }
 
   .hero {

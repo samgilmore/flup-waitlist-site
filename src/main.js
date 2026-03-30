@@ -66,6 +66,8 @@ app.innerHTML = `
               <button type="submit">Join the waitlist</button>
             </form>
 
+            <p class="reward-hint">Refer 5 friends for early access.</p>
+
             <button class="lookup-button" id="lookup-toggle" type="button">Already joined? Check your status</button>
 
             <section class="lookup-panel" id="lookup-panel" hidden>

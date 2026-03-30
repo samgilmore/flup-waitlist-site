@@ -1,6 +1,7 @@
 import "./styles/base.css";
 import "./styles/admin.css";
 import { escapeHtml } from "./lib/html.js";
+import { buildAdminSummary } from "./lib/admin-summary.js";
 import {
   createAdminClient,
   fetchAdminWaitlist,
@@ -48,6 +49,21 @@ adminApp.innerHTML = `
           <button class="secondary-button" id="sign-out-button" type="button">Sign out</button>
         </div>
 
+        <section class="admin-summary-grid" id="admin-summary-grid" aria-label="Admin summary metrics">
+          <article class="admin-summary-card">
+            <span class="admin-summary-label">Total signups</span>
+            <strong>0</strong>
+          </article>
+          <article class="admin-summary-card">
+            <span class="admin-summary-label">5+ referrals</span>
+            <strong>0</strong>
+          </article>
+          <article class="admin-summary-card">
+            <span class="admin-summary-label">10+ referrals</span>
+            <strong>0</strong>
+          </article>
+        </section>
+
         <form class="admin-filters" id="admin-filters">
           <label for="admin-search">Search</label>
           <input id="admin-search" name="search" type="search" placeholder="Search by email" />
@@ -94,6 +110,7 @@ const dashboard = document.querySelector("#admin-dashboard");
 const adminMessage = document.querySelector("#admin-message");
 const dashboardMessage = document.querySelector("#admin-dashboard-message");
 const adminTableBody = document.querySelector("#admin-table-body");
+const adminSummaryGrid = document.querySelector("#admin-summary-grid");
 const filtersForm = document.querySelector("#admin-filters");
 const signOutButton = document.querySelector("#sign-out-button");
 const rewardThreshold = 5;
@@ -192,6 +209,23 @@ function renderRows(rows) {
   adminTableBody.innerHTML = rows.map((row) => renderRow(row)).join("");
 }
 
+function renderSummary(summary) {
+  adminSummaryGrid.innerHTML = `
+    <article class="admin-summary-card">
+      <span class="admin-summary-label">Total signups</span>
+      <strong>${summary.totalSignups}</strong>
+    </article>
+    <article class="admin-summary-card">
+      <span class="admin-summary-label">5+ referrals</span>
+      <strong>${summary.fivePlusCount}</strong>
+    </article>
+    <article class="admin-summary-card">
+      <span class="admin-summary-label">10+ referrals</span>
+      <strong>${summary.tenPlusCount}</strong>
+    </article>
+  `;
+}
+
 async function loadTable() {
   const formData = new FormData(filtersForm);
   const params = {
@@ -199,7 +233,12 @@ async function loadTable() {
     threshold: String(formData.get("threshold") ?? "")
   };
 
-  const rows = await fetchAdminWaitlist(client, params);
+  const [summaryRows, rows] = await Promise.all([
+    fetchAdminWaitlist(client),
+    fetchAdminWaitlist(client, params)
+  ]);
+
+  renderSummary(buildAdminSummary(summaryRows));
   renderRows(rows);
 }
 

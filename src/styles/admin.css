@@ -103,6 +103,37 @@ body {
   gap: 1rem;
 }
 
+.admin-summary-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-summary-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(16, 35, 63, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 248, 255, 0.92) 100%);
+  box-shadow: 0 0.9rem 2rem rgba(19, 35, 60, 0.06);
+}
+
+.admin-summary-card strong {
+  font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.45rem, 3vw, 1.95rem);
+  letter-spacing: -0.04em;
+  color: rgba(16, 35, 63, 0.96);
+}
+
+.admin-summary-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(19, 35, 60, 0.55);
+}
+
 .admin-table-shell {
   overflow-x: auto;
   border-radius: 1.2rem;
@@ -183,6 +214,10 @@ body {
 }
 
 @media (min-width: 760px) {
+  .admin-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .admin-form,
   .admin-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
